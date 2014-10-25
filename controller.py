@@ -67,6 +67,21 @@ GET_DEVICE_PROPS_CMD = 'udevadm info -q all -n %s --attribute-walk'
 ################################################################################
 ARDUINO_SEARCH_STRING = 'Arduino'
 
+################################################################################
+# BAUD_RATE
+#
+# Set to the baud rate used in AVR source.
+################################################################################
+BAUD_RATE = 115200
+
+################################################################################
+# main()
+#
+# Entry point of the program. Initialize serial communication with the Arduino
+# and create a named pipe for communication with Linux processes, then enter the
+# main loop. The pipe is polled for '0' and '1', used to power otabox off and
+# on, respectively.
+################################################################################
 def main():
   # Establish communication with the Arduino
   ser = None
@@ -77,7 +92,7 @@ def main():
     # Check if the device is an Arduino
     if ARDUINO_SEARCH_STRING in deviceInfo:
       ser = serial.Serial(port=device, \
-                          baudrate=1200, \
+                          baudrate=BAUD_RATE, \
                           parity=serial.PARITY_NONE, \
                           stopbits=serial.STOPBITS_ONE, \
                           bytesize=serial.EIGHTBITS)
