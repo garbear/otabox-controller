@@ -30,6 +30,7 @@
 # already exists.
 ################################################################################
 
+import glob
 import os
 import serial
 import subprocess
@@ -100,6 +101,9 @@ def main():
   if not ser:
     print('No Arduino detected')
     sys.exit(0)
+  if not ser.isOpen():
+    print('Failed to connect to Arduino')
+    sys.exit(0)
 
   # Check if the pipe exists, and re-create if -f was passed as an argument
   if os.path.exists(PIPE_NAME):
@@ -118,13 +122,18 @@ def main():
         try:
           command = int(linein)
           if command == 0:
-            print('Command: off')
+            ser.write("0")
+            ser.flush()
           elif command == 1:
-            print('Command: on')
+            ser.write("1")
+            ser.flush()
         except:
           pass
   except:
     pass
+
+  # Clean up
+  ser.close()
   os.unlink(PIPE_NAME)
 
 if __name__ == '__main__':
