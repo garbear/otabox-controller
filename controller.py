@@ -84,6 +84,15 @@ BAUD_RATE = 115200
 # on, respectively.
 ################################################################################
 def main():
+  # Check if the pipe exists, and re-create if -f was passed as an argument
+  if os.path.exists(PIPE_NAME):
+    param = sys.argv[1] if len(sys.argv) > 1 else ''
+    if '-f' in param:
+      os.unlink(PIPE_NAME)
+    else:
+      print('Pipe exists (%s), run with -f to unlink' % PIPE_NAME)
+      sys.exit(0)
+
   # Establish communication with the Arduino
   ser = None
   devices = glob.glob(SERIAL_PORTS)
@@ -105,16 +114,10 @@ def main():
     print('Failed to connect to Arduino')
     sys.exit(0)
 
-  # Check if the pipe exists, and re-create if -f was passed as an argument
-  if os.path.exists(PIPE_NAME):
-    param = sys.argv[1] if len(sys.argv) > 1 else ''
-    if '-f' in param:
-      os.unlink(PIPE_NAME)
-    else:
-      print('Pipe exists (%s), run with -f to unlink' % PIPE_NAME)
-      sys.exit(0)
-
+  # Create the pipe
   os.mkfifo(PIPE_NAME)
+
+  # Main loop
   try:
     with open(PIPE_NAME) as pipein:
       while True:
