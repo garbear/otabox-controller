@@ -25,7 +25,7 @@
 #include <Arduino.h>
 
 #define LED_PIN   13
-#define BAUD_RATE 115200
+#define BAUD_RATE 9600
 
 OtaboxController::OtaboxController(void)
  : m_serial(NULL)
@@ -35,30 +35,22 @@ OtaboxController::OtaboxController(void)
 void OtaboxController::Init(void)
 {
   pinMode(LED_PIN, OUTPUT);
-  
-#if defined(USBCON)
-  m_serial = &Serial1;
-#else
-  m_serial = &Serial;
-#endif
 
+  m_serial = &Serial;
   m_serial->begin(BAUD_RATE);
-  m_serial->setTimeout(250); // ms
 }
 
 void OtaboxController::Spin(void)
 {
-  char buffer;
   for (;;)
   {
     while (m_serial->available())
     {
-      m_serial->readBytes(&buffer, sizeof(buffer));
-      if (buffer == '0')
+      int byteIn = m_serial->read();
+      if (byteIn == '0')
         digitalWrite(LED_PIN, LOW);
-      else if (buffer == '1')
+      else if (byteIn == '1')
         digitalWrite(LED_PIN, HIGH);
     }
   }
 }
-

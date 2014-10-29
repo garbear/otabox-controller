@@ -34,8 +34,8 @@ OtaboxController controller;
  */
 void setup()
 {
-	// Set up our serial communications
-	controller.Init();
+  // Set up our serial communications
+  controller.Init();
 }
 
 /**
@@ -48,6 +48,5 @@ void setup()
  */
 void loop()
 {
-	controller.Spin();
+  controller.Spin();
 }
-

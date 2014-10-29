@@ -21,7 +21,7 @@
  */
 #pragma once
 
-#include <HardwareSerial.h>
+class Serial_;
 
 class OtaboxController
 {
@@ -39,12 +39,5 @@ public:
   void Spin(void);
 
 private:
-  // Arduino Leonardo support
-  // http://forum.arduino.cc/index.php?topic=111354.0
-#if defined(USBCON)
-  HardwareSerial* m_serial;
-#else
-  Serial_*        m_serial;
-#endif
+  Serial_* m_serial;
 };
-
