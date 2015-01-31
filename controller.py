@@ -81,7 +81,7 @@ BAUD_RATE = 9600
 # Entry point of the program. Initialize serial communication with the Arduino
 # and create a named pipe for communication with Linux processes, then enter the
 # main loop. The pipe is polled for '0' and '1', used to power otabox off and
-# on, respectively.
+# on, respectively. When a 'q' is read, this program terminates.
 ################################################################################
 def main():
   # Check if the pipe exists, and re-create if -f was passed as an argument
@@ -131,7 +131,8 @@ def main():
             ser.write("1")
             ser.flush()
         except:
-          pass
+          if linein and linein[0] == "q":
+            break
   except:
     pass
 
