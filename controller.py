@@ -101,12 +101,16 @@ def main():
     deviceInfo = subprocess.check_output(GET_DEVICE_PROPS_CMD % device, shell=True)
     # Check if the device is an Arduino
     if ARDUINO_SEARCH_STRING in deviceInfo:
-      ser = serial.Serial(port=device, \
-                          baudrate=BAUD_RATE, \
-                          parity=serial.PARITY_NONE, \
-                          stopbits=serial.STOPBITS_ONE, \
-                          bytesize=serial.EIGHTBITS)
-      break
+      try:
+        ser = serial.Serial(port=device, \
+                            baudrate=BAUD_RATE, \
+                            parity=serial.PARITY_NONE, \
+                            stopbits=serial.STOPBITS_ONE, \
+                            bytesize=serial.EIGHTBITS)
+        break
+      except serial.SerialException as e:
+        print(e)
+        print('Try adding yourself to the dial out group: sudo adduser <username> dialout')
   if not ser:
     print('No Arduino detected')
     sys.exit(0)
